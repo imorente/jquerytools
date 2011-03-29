@@ -568,9 +568,9 @@
 				weeks.empty();				
 				pm.add(nm).removeClass(css.disabled); 
 				
-				var last_day = new Date(year, month+1, 0).getDate();
-				var remaining = Math.ceil((last_day + begin) / 7) * 7;
-				for (var j = 0, a, num; j < remaining; j++) {
+				// !begin === "sunday"
+				for (var j = !begin ? -7 : 0, a, num; j < (!begin ? 35 : 42); j++) { 
+					
 					a = $("<a/>");
 					
 					if (j % 7 === 0) {
