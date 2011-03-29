@@ -421,7 +421,10 @@
 				
 				// year selector
 				yearSelector.unbind("change").change(function() {
-					self.setValue($(this).val(), monthSelector.val());		
+					var year = $(this).val();
+					if (year != '' + currYear) {
+						self.setValue($(this).val(), monthSelector.val());		
+					}
 				});
 
 				if (yearSelector.is('input')) {
@@ -483,7 +486,6 @@
 			}, 
 //}}}
 
-
 //{{{  setValue
 
 			setValue: function(year, month, day)  {
@@ -512,9 +514,7 @@
 					select(date, conf);
 					return self; 
 				} 				
-				
-				var redrawWeeks = (month != currMonth) || (year != currYear) || ($('a', weeks).length == 0);
-				
+								
 				currMonth = month;
 				currYear = year;
 				currDay = day;
@@ -563,8 +563,6 @@
 				} 	   
 					 
 				// populate weeks
-				if (!redrawWeeks) { return self; }
-				
 				weeks.empty();				
 				pm.add(nm).removeClass(css.disabled); 
 				
