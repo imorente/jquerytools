@@ -303,7 +303,7 @@
 			
 			$(document).bind("keydown.d", function(e) {
 					
-				if (e.ctrlKey) { return true; }				
+				if (e.ctrlKey || e.altKey || e.metaKey) { return true; }				
 				var key = e.keyCode;			 
 				
 				// backspace clears the value
@@ -712,7 +712,7 @@
 			} 
 			
 			// allow tab
-			return e.shiftKey || e.ctrlKey || e.altKey || key == 9 ? true : e.preventDefault();   
+			return e.shiftKey || e.ctrlKey || e.altKey || e.metaKey || key == 9 ? true : e.preventDefault();   
 			
 		}); 
 		
