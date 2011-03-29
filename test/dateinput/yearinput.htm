@@ -1,0 +1,16 @@
+<!-- Allow typing in the year in a number field -->
+<script src="../js/jquery-1.4.2.js"></script>
+<script src="../../src/dateinput/dateinput.js"></script>
+
+<link rel="stylesheet" type="text/css" href="skin1.css"/>
+
+<!-- HTML5 date input -->
+<input type="date" name="mydate" data-value="2010-12-01" />
+
+<input type="date" name="mydate" data-value="2010-12-30" />
+
+<!-- make it happen -->
+<script>
+$(":date").dateinput({selectors: true, yearRange: false});
+</script>
+

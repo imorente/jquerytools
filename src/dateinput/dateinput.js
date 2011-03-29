@@ -234,7 +234,7 @@
 			// year & month selectors
 			if (conf.selectors) {				
 				var monthSelector = $("<select/>").attr("id", css.month),
-					 yearSelector = $("<select/>").attr("id", css.year);				
+					 yearSelector = $(conf.yearRange ? "<select/>" : "<input type='number' step='1'/>").attr("id", css.year);				
 				title.html(monthSelector.add(yearSelector));
 			}						
 			
@@ -423,6 +423,21 @@
 				yearSelector.unbind("change").change(function() {
 					self.setValue($(this).val(), monthSelector.val());		
 				});
+
+				if (yearSelector.is('input')) {
+					yearSelector.unbind("input").bind("input", function() {
+						var year = $(this).val().substr(0, 4);
+						if (year.length == 4) {
+							self.setValue(year, monthSelector.val());
+						}
+					}).unbind("keydown").keydown(function(e) {
+						// Cancel out keyboard shortcuts except Return and Escape
+						var key = e.keyCode;
+						if (key != 13 && key != 27) {
+							e.stopPropagation();
+						}
+					});
+				}
 				
 				// prev / next month
 				pm = root.find("#" + css.prev).unbind("click").click(function(e) {
@@ -498,6 +513,8 @@
 					return self; 
 				} 				
 				
+				var redrawWeeks = (month != currMonth) || (year != currYear) || ($('a', weeks).length == 0);
+				
 				currMonth = month;
 				currYear = year;
 				currDay = day;
@@ -513,21 +530,29 @@
 					
 					// month selector
 					monthSelector.empty();
+					var from = min || new Date(year, 0, 1),
+						 to = max || new Date(year, 11, 31);
 					$.each(labels.months, function(i, m) {					
-						if (min < new Date(year, i + 1, 1) && max > new Date(year, i, 0)) {
+						if (from < new Date(year, i + 1, 1) && to > new Date(year, i, 0)) {
 							monthSelector.append($("<option/>").html(m).attr("value", i));
 						}
 					});
 					
 					// year selector
 					yearSelector.empty();		
-					var yearNow = now.getFullYear();
+					if (yearSelector.is('input')) {
+						yearSelector
+							.attr('min', min && min.getFullYear() || 0)
+							.attr('max', max && max.getFullYear() || 9999);
+					} else {
+						var yearNow = now.getFullYear();
 					
-					for (var i = yearNow + conf.yearRange[0];  i < yearNow + conf.yearRange[1]; i++) {
-						if (min < new Date(i + 1, 0, 1) && max > new Date(i, 0, 0)) {
-							yearSelector.append($("<option/>").text(i));
-						}
-					}		
+						for (var i = yearNow + conf.yearRange[0];  i < yearNow + conf.yearRange[1]; i++) {
+							if ((!min || min < new Date(i + 1, 0, 1)) && (!max || max > new Date(i, 0, 0))) {
+								yearSelector.append($("<option/>").text(i));
+							}
+						}		
+					}
 					
 					monthSelector.val(month);
 					yearSelector.val(year);
@@ -538,6 +563,8 @@
 				} 	   
 					 
 				// populate weeks
+				if (!redrawWeeks) { return self; }
+				
 				weeks.empty();				
 				pm.add(nm).removeClass(css.disabled); 
 				
