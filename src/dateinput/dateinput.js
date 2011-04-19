@@ -65,7 +65,8 @@
 				focus: 0,
 				disabled: 0,
 				trigger: 0
-			}  
+			},
+			classNames: {}
 		},
 		
 		localize: function(language, labels) {
@@ -176,6 +177,7 @@
 		var self = this,  
 			 now = new Date(),
 			 css = conf.css,
+			 classNames = conf.classNames,
 			 labels = LABELS[conf.lang],
 			 root = $("#" + css.root),
 			 title = root.find("#" + css.title),
@@ -218,23 +220,25 @@
 			
 			// root
 			root = $('<div><div><a/><div/><a/></div><div><div/><div/></div></div>')
-				.hide().css({position: 'absolute'}).attr("id", css.root);			
+				.hide().css({position: 'absolute'}).attr("id", css.root).addClass(classNames.root);			
 						
 			// elements
 			root.children()
-				.eq(0).attr("id", css.head).end() 
-				.eq(1).attr("id", css.body).children()
-					.eq(0).attr("id", css.days).end()
-					.eq(1).attr("id", css.weeks).end().end().end()
-				.find("a").eq(0).attr("id", css.prev).end().eq(1).attr("id", css.next);		 				  
+				.eq(0).attr("id", css.head).addClass(classNames.head).end() 
+				.eq(1).attr("id", css.body).addClass(classNames.body).children()
+					.eq(0).attr("id", css.days).addClass(classNames.days).end()
+					.eq(1).attr("id", css.weeks).addClass(classNames.weeks).end().end().end()
+				.find("a")
+					.eq(0).attr("id", css.prev).addClass(classNames.prev).end()
+					.eq(1).attr("id", css.next).addClass(classNames.nect);		 				  
 			
 			// title
-			title = root.find("#" + css.head).find("div").attr("id", css.title);
+			title = root.find("#" + css.head).find("div").attr("id", css.title).addClass(classNames.title);
 			
 			// year & month selectors
 			if (conf.selectors) {				
-				var monthSelector = $("<select/>").attr("id", css.month),
-					 yearSelector = $(conf.yearRange ? "<select/>" : "<input type='number' step='1'/>").attr("id", css.year);				
+				var monthSelector = $("<select/>").attr("id", css.month).addClass(classNames.month),
+					 yearSelector = $(conf.yearRange ? "<select/>" : "<input type='number' step='1'/>").attr("id", css.year).addClass(classNames.year);				
 				title.html(monthSelector.add(yearSelector));
 			}						
 			
@@ -592,11 +596,11 @@
 						
 						// current date
 						if (isSameDay(value, date)) {
-							a.attr("id", css.current).addClass(css.focus);
+							a.attr("id", css.current).addClass(classNames.current).addClass(css.focus);
 							
 						// today
 						} else if (isSameDay(now, date)) {
-							a.attr("id", css.today);
+							a.attr("id", css.today).addClass(classNames.today);
 						}	 
 					}
 					
@@ -618,8 +622,8 @@
 				weeks.find("a").click(function(e) {
 					var el = $(this); 
 					if (!el.hasClass(css.disabled)) {  
-						$("#" + css.current).removeAttr("id");
-						el.attr("id", css.current);	 
+						$("#" + css.current).removeAttr("id").removeClass(classNames.current).removeClass(css.focus);
+						el.attr("id", css.current).addClass(classNames.current);	 
 						select(el.data("date"), conf, e);
 					}
 					return false;
@@ -767,6 +771,7 @@
 			if (!val && key != 'prefix') { 
 				conf.css[key] = (conf.css.prefix || '') + (val || key);
 			}
+			conf.classNames[key] = conf.classNames[key] || ((conf.css.prefix || '') + key);
 		});		
 	
 		var els;
