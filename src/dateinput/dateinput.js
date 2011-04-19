@@ -230,7 +230,7 @@
 					.eq(1).attr("id", css.weeks).addClass(classNames.weeks).end().end().end()
 				.find("a")
 					.eq(0).attr("id", css.prev).addClass(classNames.prev).end()
-					.eq(1).attr("id", css.next).addClass(classNames.nect);		 				  
+					.eq(1).attr("id", css.next).addClass(classNames.next);		 				  
 			
 			// title
 			title = root.find("#" + css.head).find("div").attr("id", css.title).addClass(classNames.title);
