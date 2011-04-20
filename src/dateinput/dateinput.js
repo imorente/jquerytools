@@ -434,7 +434,7 @@
 				if (yearSelector.is('input')) {
 					yearSelector.unbind("input").bind("input", function() {
 						var year = $(this).val().substr(0, 4);
-						if (year.length == 4) {
+						if (year.length == 4 && !isNaN(year)) {
 							self.setValue(year, monthSelector.val());
 						}
 					}).unbind("keydown").keydown(function(e) {
