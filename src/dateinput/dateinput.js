@@ -105,8 +105,9 @@
 	var Re = /d{1,4}|m{1,4}|yy(?:yy)?|"[^"]*"|'[^']*'/g, tmpTag = $("<a/>");
 	
 	function format(date, fmt, lang) {
+		if (!date) return null;
 		
-	  var d = date.getDate(),
+		var d = date.getDate(),
 			D = date.getDay(),
 			m = date.getMonth(),
 			y = date.getFullYear(),
@@ -138,7 +139,8 @@
 	} 
 
 	function isSameDay(d1, d2)  {
-		return d1.getFullYear() === d2.getFullYear() && 
+		return d1 && d2 &&
+			d1.getFullYear() === d2.getFullYear() && 
 			d1.getMonth() == d2.getMonth() &&
 			d1.getDate() == d2.getDate(); 
 	}
@@ -274,10 +276,10 @@
 		function select(date, conf, e) {  
 			
 			// current value
-			value 	 = date;
-			currYear  = date.getFullYear();
-			currMonth = date.getMonth();
-			currDay	 = date.getDate();				
+			value 	  = date;
+			currYear  = date && date.getFullYear();
+			currMonth = date && date.getMonth();
+			currDay	  = date && date.getDate();				
 			
 			
 			// change
@@ -495,7 +497,7 @@
 			setValue: function(year, month, day)  {
 				
 				var date = integer(month) >= -1 ? new Date(integer(year), integer(month), integer(day == undefined || isNaN(day) ? 1 : day)) : 
-					year || value;				
+					year || value || now;				
 				
 				if (date < min) { date = min; }
 				else if (date > max) { date = max; }
@@ -655,6 +657,15 @@
 			
 			today: function() {
 				return self.setValue(now);	
+			},
+			
+			select: function(date) {
+				select(date, conf);
+				return self.setValue(date);
+			},
+			
+			clear: function() {
+			    return self.select(null);
 			},
 			
 			addDay: function(amount) {
