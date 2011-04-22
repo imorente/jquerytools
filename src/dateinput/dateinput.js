@@ -668,6 +668,10 @@
 			    return self.select(null);
 			},
 			
+			reset: function() {
+			    return self.select(input.val() ? value : null);
+			},
+			
 			addDay: function(amount) {
 				return this.setValue(currYear, currMonth, currDay + (amount || 1));		
 			},
