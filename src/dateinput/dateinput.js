@@ -28,6 +28,7 @@
 		
 		conf: { 
 			format: 'mm/dd/yy',
+			formatfn: null,
 			selectors: false,
 			yearRange: [-5, 5],
 			lang: 'en',
@@ -284,7 +285,8 @@
 			if (e.isDefaultPrevented()) { return; }
 			
 			// formatting			
-			input.val(format(date, conf.format, conf.lang));
+			var formatFn = conf.formatfn || format;
+			input.val(formatFn(date, conf.format, conf.lang));
 			
 			// store value into input
 			input.data("date", date);
